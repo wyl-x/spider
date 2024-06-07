@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./vue.min.js"></script>
+  <script src="../data/water.js"></script>
+  <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          border: 1px solid #333;
+          font-family: sans-serif;
+      }
+
+      tr:nth-of-type(even) {
+          background-color: rgb(237, 238, 242);
+      }
+
+      th,
+      td {
+          border: 1px solid #666;
+          padding: 8px 10px;
+          text-align: center;
+      }
+
+  </style>
+</head>
+<body>
+<div id="app">
+  <table>
+    <tr>
+      <th>序号</th>
+      <th>姓名</th>
+      <th>账户</th>
+      <th>地址</th>
+      <th>余额</th>
+      <th>欠费</th>
+
+      <th>日期</th>
+      <th>总数</th>
+      <th>单价</th>
+      <th>其他</th>
+    </tr>
+
+    <tr v-for="(item, index) in list" :key="item.account_name">
+      <td>{{index+1}}</td>
+      <td>{{ item.account_name  }}</td>
+      <td>{{ item.account  }}</td>
+      <td>{{ item.address  }}</td>
+      <td>{{ item.balance  }}</td>
+      <td>{{ item.total_charge  }}</td>
+
+      <td>{{item.date}}</td>
+      <td>{{item.total}}</td>
+      <td>{{item.price}}</td>
+      <td>{{item.content}}</td>
+    </tr>
+  </table>
+</div>
+
+
+<script>
+  app = new Vue({
+    el: '#app',
+
+    data() {
+      return {
+        list: data.sort((a, b) => b.total - a.total)
+      }
+    }
+  })
+
+</script>
+
+</body>
+</html>

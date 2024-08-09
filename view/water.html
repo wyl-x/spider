@@ -1,80 +1,174 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <script src="./vue.min.js"></script>
-  <script src="../data/water.js"></script>
-  <style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="./vue.min.js"></script>
+    <script src="../data/water.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      #app {
+        padding: 20px;
+      }
+      * {
+        box-sizing: border-box;
+      }
       table {
-          width: 100%;
-          border-collapse: collapse;
-          border: 1px solid #333;
-          font-family: sans-serif;
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #333;
+        font-family: sans-serif;
+        table-layout: fixed;
+        width: 100%;
       }
 
       tr:nth-of-type(even) {
-          background-color: rgb(237, 238, 242);
+        background-color: rgb(237, 238, 242);
+      }
+
+      table tr th {
+        position: sticky;
+        top: 50px;
+        background: #aaa;
+      }
+
+      table tr th {
+        position: sticky;
+        top: 50px;
+        background: #aaa;
       }
 
       th,
       td {
-          border: 1px solid #666;
-          padding: 8px 10px;
-          text-align: center;
+        border: 1px solid #666;
+        padding: 8px 10px;
+        text-align: center;
       }
 
-  </style>
-</head>
-<body>
-<div id="app">
-  <table>
-    <tr>
-      <th>序号</th>
-      <th>姓名</th>
-      <th>账户</th>
-      <th>地址</th>
-      <th>余额</th>
-      <th>欠费</th>
-
-      <th>日期</th>
-      <th>总数</th>
-      <th>单价</th>
-      <th>其他</th>
-    </tr>
-
-    <tr v-for="(item, index) in list" :key="item.account_name">
-      <td>{{index+1}}</td>
-      <td>{{ item.account_name  }}</td>
-      <td>{{ item.account  }}</td>
-      <td>{{ item.address  }}</td>
-      <td>{{ item.balance  }}</td>
-      <td>{{ item.total_charge  }}</td>
-
-      <td>{{item.date}}</td>
-      <td>{{item.total}}</td>
-      <td>{{item.price}}</td>
-      <td>{{item.content}}</td>
-    </tr>
-  </table>
-</div>
-
-
-<script>
-  app = new Vue({
-    el: '#app',
-
-    data() {
-      return {
-        list: data.sort((a, b) => b.total - a.total)
+      .flex {
+        display: flex;
+        align-items: center;
       }
-    }
-  })
+      .search {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      .search input {
+        font-size: 20px;
+        margin-left: 6px;
+      }
+      .form-item {
+        margin-right: 30px;
+      }
+      .header {
+        height: 50px;
+        line-height: 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="header">
+        <div class="flex search">
+          <div class="flex form-item">
+            <div>姓名</div>
+            <input type="text" v-model="keyword" />
+          </div>
 
-</script>
+          <div class="flex form-item">
+            <div>地址</div>
+            <input type="text" v-model="address" />
+          </div>
+        </div>
+      </div>
 
-</body>
+      <table style="margin-top: 40px">
+        <tr>
+          <th>序号</th>
+          <th>姓名</th>
+          <th>账户</th>
+          <th style="width: 350px">地址</th>
+          <th>余额</th>
+          <th>欠费</th>
+
+          <th>日期</th>
+          <th>总费用</th>
+
+          <th>用水量(吨)</th>
+          <th>单价</th>
+
+          <th>水费</th>
+          <th style="width: 350px">其他费用</th>
+        </tr>
+
+        <tr v-for="(item, index) in listF" :key="item.account+item.date">
+          <td>{{index+1}}</td>
+          <td>{{ item.account_name }}</td>
+          <td>{{ item.account }}</td>
+          <td>{{ item.address }}</td>
+          <td>{{ item.balance }}</td>
+          <td>{{ item.total_charge }}</td>
+
+          <td>{{item.date}}</td>
+          <td>{{item.fee_charge + item.water_charge}}</td>
+
+          <td>{{item.total}}</td>
+          <td>{{item.price}}</td>
+
+          <td>{{item.water_charge}}</td>
+          <td>{{item.content}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+      app = new Vue({
+        el: "#app",
+
+        data() {
+          const list = [];
+          const map = {};
+          data.forEach((item) => {
+            // if(map[item.account]) return
+
+            list.push(item);
+            map[item.account] = 1;
+          });
+          return {
+            address: "",
+            keyword: "",
+            list: list,
+            // .sort((a, b) => b.total - a.total)
+          };
+        },
+
+        computed: {
+          listF() {
+            return this.list.filter((item) => {
+              const nameMatch =
+                !this.keyword.trim() ||
+                item.account_name.includes(this.keyword);
+              const addressMatch =
+                !this.address.trim() || item.address.includes(this.address);
+              return nameMatch && addressMatch;
+            });
+          },
+        },
+      });
+    </script>
+  </body>
 </html>

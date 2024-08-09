@@ -16,7 +16,7 @@ const start = result.length ? result[result.length - 1].account : init
 const times = end - init + 1
 
 async function doFetch(account_no) {
-  const res = await axios.post('YOUR_URL', {account_no}, {
+  const res = await axios.post('http://www.07176789111.com/sdsx/findData.do', {account_no}, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }, timeout: 10000

@@ -93,6 +93,12 @@
             <div>地址</div>
             <input type="text" v-model="address" />
           </div>
+
+          
+          <div class="flex form-item">
+            <div>日期</div>
+            <input type="text" v-model="date" />
+          </div>
         </div>
       </div>
 
@@ -151,8 +157,9 @@
           return {
             address: "",
             keyword: "",
-            list: list,
-            // .sort((a, b) => b.total - a.total)
+            date: "",
+            // list: list,
+            list: list.sort((a, b) => b.total - a.total)
           };
         },
 
@@ -162,9 +169,14 @@
               const nameMatch =
                 !this.keyword.trim() ||
                 item.account_name.includes(this.keyword);
+                
               const addressMatch =
                 !this.address.trim() || item.address.includes(this.address);
-              return nameMatch && addressMatch;
+
+              const dateMatch =
+                !this.date.trim() || item.date.includes(this.date);
+
+              return nameMatch && addressMatch && dateMatch;
             });
           },
         },
